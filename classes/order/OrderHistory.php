@@ -371,6 +371,8 @@ class OrderHistoryCore extends ObjectModel
 			$context = Context::getContext();
 		$order = new Order($this->id_order);
 		
+		$carrier = new Carrier($order->id_carrier, $order->id_lang); 
+		
 		if (!$this->add($autodate))
 			return false;
 
@@ -391,7 +393,8 @@ class OrderHistoryCore extends ObjectModel
 				'{lastname}' => $result['lastname'],
 				'{firstname}' => $result['firstname'],
 				'{id_order}' => (int)$this->id_order,
-				'{order_name}' => $order->getUniqReference()
+				'{order_name}' => $order->getUniqReference(),
+				'{followup}' => str_replace('@', $order->shipping_number, $carrier->url)
 			);
 			if ($template_vars)
 				$data = array_merge($data, $template_vars);
